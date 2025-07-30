@@ -57,9 +57,19 @@ export default function Comment() {
       ${comment.id === 4 ? 'p-0' : 'p-1'}`}>
 
 
-
             <div className="w-12">
-              <CounterDisplay />
+              <CounterDisplay 
+    initialCount={
+    
+      comment.id === 2 
+        ? 5
+        : comment.id === 3      
+           ? 4
+        : comment.id === 4 
+        ? 2
+        : 12
+    }
+/>
             </div>
 
             <div className="flex flex-col w-full">

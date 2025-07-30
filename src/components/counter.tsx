@@ -1,8 +1,14 @@
 import React from 'react';
 import { useState } from 'react';
 
-export default function CounterDisplay() {
-  const [count, setCount] = useState(12);
+interface CounterDisplayProps {
+  initialCount?: number; // optional prop
+}
+
+
+export default function CounterDisplay({ initialCount = 12 }: CounterDisplayProps) {
+  const [count, setCount] = useState(initialCount);
+
 
   const Increment = () => {
     setCount((prev) => prev + 1);
