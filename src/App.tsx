@@ -74,7 +74,7 @@ export default function Comment() {
   };
 
   return (
-    <div> {/* ✅ Replaced fragment with div */}
+    <div> 
       {comments.map((comment) => (
         <div key={comment.id} className="flex flex-col items-center">
           <div
