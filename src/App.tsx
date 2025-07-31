@@ -4,12 +4,10 @@ import './App.css';
 
 export default function Comment() {
   const [activeReply, setActiveReply] = useState<number | null>(null);
-
-  const handleReplyClick = (id: number) => {
-    setActiveReply(activeReply === id ? null : id); 
-  };
-
-  const comments = [
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [edit, setEdit] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+  const [comments, setComments] = useState([
     {
       id: 1,
       username: 'amyrobson',
@@ -29,47 +27,73 @@ export default function Comment() {
     },
     {
       id: 3,
-      username:'ramsesminor',
-      avatar:'https://interactive-comments-section-azure.vercel.app/images/avatars/image-ramsesmiron.png',
-      time:'1 week ago',
-      text:`@maxblagun If you're still new, I'd recommend focusing on the fundamentals of HTML, CSS, and JS before
+      username: 'ramsesminor',
+      avatar: 'https://interactive-comments-section-azure.vercel.app/images/avatars/image-ramsesmiron.png',
+      time: '1 week ago',
+      text: `@maxblagun If you're still new, I'd recommend focusing on the fundamentals of HTML, CSS, and JS before
        considering React. It's very tempting to jump ahead but lay a solid foundation first.`,
     },
-   {
-    id: 4,
-    username:'juliusomo',
-    avatar:'	https://interactive-comments-section-azure.vercel.app/images/avatars/image-juliusomo.png',
-    time:'2 days ago',
-    text:`@rameseminor I couldn't agree more with this. Everything moves so fast and it always seems
-     like everyone knows the newest library/framework. But the fundamentals are what stay constant.`
-   }
+    {
+      id: 4,
+      username: 'juliusomo',
+      avatar: 'https://interactive-comments-section-azure.vercel.app/images/avatars/image-juliusomo.png',
+      time: '2 days ago',
+      text: `@rameseminor I couldn't agree more with this. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stay constant.`,
+    },
+  ]);
 
-  ];
+  const handleReplyClick = (id: number) => {
+    setActiveReply(activeReply === id ? null : id);
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setDeleteTarget(id);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteTarget(null);
+  };
+
+  const handleConfirmDelete = () => {
+    setComments((prev) => prev.filter((comment) => comment.id !== deleteTarget));
+    setDeleteTarget(null);
+  };
+
+  const handleEditClick = (id: number, currentText: string) => {
+    setEdit(id);
+    setEditText(currentText);
+  };
+
+  const handleUpdate = (id: number) => {
+    setComments((prev) =>
+      prev.map((comment) =>
+        comment.id === id ? { ...comment, text: editText } : comment
+      )
+    );
+    setEdit(null);
+  };
 
   return (
-    <>
+    <div> {/* ✅ Replaced fragment with div */}
       {comments.map((comment) => (
         <div key={comment.id} className="flex flex-col items-center">
-        
-          <div 
-              className={`flex mt-10 p-1 justify-between bg-white rounded-xl border 
-      ${comment.id === 3|| comment.id===4? 'w-[43%]' : 'w-3/5'}
-      ${comment.id === 4 ? 'p-0' : 'p-1'}`}>
-
-
+          <div
+            className={`flex mt-10 p-1 justify-between bg-white rounded-xl border 
+              ${comment.id === 3 || comment.id === 4 ? 'w-[43%]' : 'w-3/5'}
+              ${comment.id === 4 ? 'p-0' : 'p-1'}`}
+          >
             <div className="w-12">
-              <CounterDisplay 
-    initialCount={
-    
-      comment.id === 2 
-        ? 5
-        : comment.id === 3      
-           ? 4
-        : comment.id === 4 
-        ? 2
-        : 12
-    }
-/>
+              <CounterDisplay
+                initialCount={
+                  comment.id === 2
+                    ? 5
+                    : comment.id === 3
+                    ? 4
+                    : comment.id === 4
+                    ? 2
+                    : 12
+                }
+              />
             </div>
 
             <div className="flex flex-col w-full">
@@ -77,25 +101,68 @@ export default function Comment() {
                 <img src={comment.avatar} alt={comment.username} />
                 <span className="font-semibold text-sm">{comment.username}</span>
                 <span className="text-xs text-gray-500">{comment.time}</span>
-                <button
-                  className="text-indigo-700 font-semibold ml-auto flex items-center gap-2"
-                  onClick={() => handleReplyClick(comment.id)}
-                >
-                  <img
-                    src="https://interactive-comments-section-azure.vercel.app/images/icon-reply.svg"
-                    alt="Reply"
-                  />
-                  Reply
-                </button>
+
+                {comment.id === 4 ? (
+                  <div className="ml-auto flex items-center gap-4">
+                    <button
+                      className="text-red-600 font-semibold flex items-center gap-1"
+                      onClick={() => handleDeleteClick(comment.id)}
+                    >
+                      <img
+                        src="https://interactive-comments-section-azure.vercel.app/images/icon-delete.svg"
+                        alt="Delete"
+                      />
+                      Delete
+                    </button>
+                    <button
+                      className="text-indigo-700 font-semibold flex items-center gap-1 pr-6"
+                      onClick={() => handleEditClick(comment.id, comment.text)}
+                    >
+                      <img
+                        src="https://interactive-comments-section-azure.vercel.app/images/icon-edit.svg"
+                        alt="Edit"
+                      />
+                      Edit
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="text-indigo-700 font-semibold ml-auto flex items-center gap-2 p-2"
+                    onClick={() => handleReplyClick(comment.id)}
+                  >
+                    <img
+                      src="https://interactive-comments-section-azure.vercel.app/images/icon-reply.svg"
+                      alt="Reply"
+                    />
+                    Reply
+                  </button>
+                )}
               </div>
 
-              <div className="flex">
-                <p className="text-md text-gray-500 m-5 mt-2">{comment.text}</p>
+              <div className="flex ">
+                <div className="flex flex-col w-full">
+                  {edit === comment.id ? (
+                    <div className="flex flex-col w-full p-3 relative">
+                      <textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className="min-h-[120px] border p-4 rounded-xl m-2 text-sm"
+                      />
+                      <button
+                        onClick={() => handleUpdate(comment.id)}
+                        className=" self-end mt-4 px-4 py-1 bg-indigo-800 text-white rounded-lg font-semibold"
+                      >
+                        Update
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-md text-gray-500 m-5 mt-2">{comment.text}</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-        
           {activeReply === comment.id && (
             <div className="flex justify-center mt-4 w-3/5">
               <div className="flex p-4 w-full border rounded-xl bg-gray-50">
@@ -115,27 +182,53 @@ export default function Comment() {
               </div>
             </div>
           )}
+
+          {deleteTarget === comment.id && comment.id === 4 && (
+            <div className="flex w-[28%] absolute mt-[8%]">
+              <div className="bg-white p-8 pr-10 rounded-xl shadow-lg border w-full">
+                <h1 className="text-lg font-bold mb-3 text-gray-600">
+                  Delete comment
+                </h1>
+                <p className="text-gray-400 mb-6 text-md">
+                  Are you sure you want to delete this comment? This will remove
+                   the comment and can’t be undone.
+                </p>
+                <div className="flex justify-between gap-3">
+                  <button
+                    onClick={handleCancelDelete}
+                    className="flex-1 bg-gray-400 text-white p-2 rounded-lg font-semibold hover:bg-gray-700 transition"
+                  >
+                    NO, CANCEL
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    className="flex-1 bg-red-400 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+                  >
+                    YES, DELETE
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ))}
-                <div className="flex justify-center mt-4">
-  <div className="flex p-4 w-3/5 border rounded-xl bg-gray-50">
-    <div>
-      <img
-        src="https://interactive-comments-section-azure.vercel.app/images/avatars/image-juliusomo.png"
-        alt="reply-user"
-      />
+                  <div className="flex justify-center mt-4 ">
+              <div className="flex p-4 w-3/5 border rounded-xl bg-gray-50 ">
+                <div>
+                  <img
+                    src="https://interactive-comments-section-azure.vercel.app/images/avatars/image-juliusomo.png"
+                    alt="reply-user"
+                  />
+                </div>
+                <textarea
+                  placeholder="Add a comment..."
+                  className="w-full min-h-[150px] resize-none border p-2 rounded-xl m-3"
+                />
+                <button className="mt-6 px-4 py-1 bg-indigo-800 text-white rounded-xl h-10 font-semibold">
+                  Send
+                </button>
+              </div>
+            </div>
     </div>
-    <textarea
-      placeholder="Add a comment..."
-      className="w-full min-h-[150px] resize-none border p-2 rounded-xl m-3"
-    />
-    <button className="mt-6 px-4 py-1 bg-indigo-800 text-white rounded-xl h-10 font-semibold">
-      Send
-    </button>
-  </div>
-</div>
-
-    </>
   );
 }
-
