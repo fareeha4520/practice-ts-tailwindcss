@@ -74,15 +74,18 @@ export default function Comment() {
   };
 
   return (
-    <div> 
+    <div className='container mx-auto '> 
       {comments.map((comment) => (
-        <div key={comment.id} className="flex flex-col items-center">
+        
+        <div key={comment.id} className="  flex flex-col items-center ">
+     
           <div
-            className={`flex mt-10 p-1 justify-between bg-white rounded-xl border 
-              ${comment.id === 3 || comment.id === 4 ? 'w-[43%]' : 'w-3/5'}
-              ${comment.id === 4 ? 'p-0' : 'p-1'}`}
-          >
-            <div className="w-12">
+            className={` flex mt-10 p-1 justify-between bg-white rounded-xl 
+              ${comment.id === 3 || comment.id === 4 ? 'w-[43%] ' : 'w-3/5 lg:[80%] xl:[90%] '}
+              ${comment.id === 4 ? 'p-0' : 'p-1'}`}      
+          > 
+          
+            <div className="w-12 ">
               <CounterDisplay
                 initialCount={
                   comment.id === 2
@@ -94,16 +97,18 @@ export default function Comment() {
                     : 12
                 }
               />
-            </div>
-
-            <div className="flex flex-col w-full">
-              <div className="flex items-center gap-2">
+            </div> 
+            <div className="flex flex-col w-full  ">
+              <div className="flex items-center gap-2 ">
                 <img src={comment.avatar} alt={comment.username} />
                 <span className="font-semibold text-sm">{comment.username}</span>
+                {comment.id === 4 && (
+                  <span className="bg-indigo-800 text-white text-xs p-1 rounded">you</span>
+                )}
                 <span className="text-xs text-gray-500">{comment.time}</span>
 
                 {comment.id === 4 ? (
-                  <div className="ml-auto flex items-center gap-4">
+                  <div className="ml-auto flex items-center gap-4 " >
                     <button
                       className="text-red-600 font-semibold flex items-center gap-1"
                       onClick={() => handleDeleteClick(comment.id)}
@@ -127,7 +132,7 @@ export default function Comment() {
                   </div>
                 ) : (
                   <button
-                    className="text-indigo-700 font-semibold ml-auto flex items-center gap-2 p-2"
+                    className="text-indigo-700 font-semibold ml-auto flex items-center gap-2 p-2 "
                     onClick={() => handleReplyClick(comment.id)}
                   >
                     <img
@@ -164,7 +169,7 @@ export default function Comment() {
           </div>
 
           {activeReply === comment.id && (
-            <div className="flex justify-center mt-4 w-3/5">
+            <div className="flex justify-center mt-4 w-3/5 ]">
               <div className="flex p-4 w-full border rounded-xl bg-gray-50">
                 <div>
                   <img
@@ -210,10 +215,10 @@ export default function Comment() {
               </div>
             </div>
           )}
-        </div>
+        </div> 
       ))}
                   <div className="flex justify-center mt-4 ">
-              <div className="flex p-4 w-3/5 border rounded-xl bg-gray-50 ">
+              <div className="flex p-4 w-3/5  rounded-xl bg-gray-50 ">
                 <div>
                   <img
                     src="https://interactive-comments-section-azure.vercel.app/images/avatars/image-juliusomo.png"
@@ -222,7 +227,7 @@ export default function Comment() {
                 </div>
                 <textarea
                   placeholder="Add a comment..."
-                  className="w-full min-h-[150px] resize-none border p-2 rounded-xl m-3"
+                  className="w-full min-h-[150px] resize-none border-gray-300 border p-2 rounded-xl m-3"
                 />
                 <button className="mt-6 px-4 py-1 bg-indigo-800 text-white rounded-xl h-10 font-semibold">
                   Send
